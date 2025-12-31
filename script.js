@@ -1,55 +1,87 @@
 const datePicker = document.getElementById("datePicker");
 const rows = document.querySelectorAll(".row");
 
-// set today date
-const today = new Date().toISOString().split("T")[0];
-datePicker.value = today;
+datePicker.value = new Date().toISOString().split("T")[0];
 
 function loadPlanner() {
   rows.forEach(row => {
     const subject = row.dataset.subject;
+    const chaptersDiv = row.querySelector(".chapters");
     const targetsDiv = row.querySelector(".targets");
-    const addBtn = row.querySelector(".addBtn");
+    const addChapterBtn = row.querySelector(".addChapterBtn");
 
-    let key = datePicker.value + "_" + subject;
-    let tasks = JSON.parse(localStorage.getItem(key)) || [];
+    const key = datePicker.value + "_" + subject;
+    let data = JSON.parse(localStorage.getItem(key)) || [];
 
     function save() {
-      localStorage.setItem(key, JSON.stringify(tasks));
+      localStorage.setItem(key, JSON.stringify(data));
     }
 
     function render() {
+      chaptersDiv.innerHTML = "";
       targetsDiv.innerHTML = "";
-      tasks.forEach((task, index) => {
-        const div = document.createElement("div");
-        div.className = "task";
-        div.innerHTML = `
-          <label>
-            <input type="checkbox" ${task.done ? "checked" : ""}>
-            ${task.name}
-          </label>
-          <button>X</button>
+
+      data.forEach((chapter, cIndex) => {
+        const chDiv = document.createElement("div");
+        chDiv.className = "chapter";
+        chDiv.innerHTML = `
+          <input type="checkbox" ${chapter.done ? "checked" : ""}>
+          <strong>${chapter.name}</strong>
         `;
 
-        div.querySelector("input").addEventListener("change", e => {
-          tasks[index].done = e.target.checked;
+        chDiv.querySelector("input").addEventListener("change", e => {
+          data[cIndex].done = e.target.checked;
           save();
         });
 
-        div.querySelector("button").addEventListener("click", () => {
-          tasks.splice(index, 1);
-          save();
-          render();
-        });
+        chDiv.addEventListener("click", () => showTargets(cIndex));
 
-        targetsDiv.appendChild(div);
+        chaptersDiv.appendChild(chDiv);
       });
     }
 
-    addBtn.onclick = () => {
-      const name = prompt("Enter target (PYQ / Chapter / Test)");
+    function showTargets(index) {
+      targetsDiv.innerHTML = "";
+      data[index].tasks.forEach((task, tIndex) => {
+        const tDiv = document.createElement("div");
+        tDiv.className = "task";
+        tDiv.innerHTML = `
+          <input type="checkbox" ${task.done ? "checked" : ""}>
+          ${task.name}
+          <button>X</button>
+        `;
+
+        tDiv.querySelector("input").addEventListener("change", e => {
+          task.done = e.target.checked;
+          save();
+        });
+
+        tDiv.querySelector("button").addEventListener("click", () => {
+          data[index].tasks.splice(tIndex, 1);
+          save();
+          showTargets(index);
+        });
+
+        targetsDiv.appendChild(tDiv);
+      });
+
+      const addTaskBtn = document.createElement("button");
+      addTaskBtn.textContent = "+ Target";
+      addTaskBtn.onclick = () => {
+        const name = prompt("Enter target (PYQ / Module / NCERT)");
+        if (name) {
+          data[index].tasks.push({ name, done:false });
+          save();
+          showTargets(index);
+        }
+      };
+      targetsDiv.appendChild(addTaskBtn);
+    }
+
+    addChapterBtn.onclick = () => {
+      const name = prompt("Enter Chapter Name");
       if (name) {
-        tasks.push({ name, done:false });
+        data.push({ name, done:false, tasks:[] });
         save();
         render();
       }
