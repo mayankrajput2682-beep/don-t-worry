@@ -2,11 +2,11 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
 body{
-  background:#0f172a;
+  background:#0b1220;
   color:white;
 }
 
@@ -14,11 +14,32 @@ h1{
   text-align:center;
   padding:15px;
   background:#020617;
+  letter-spacing:1px;
 }
 
 .date-bar{
-  background:#020617;
+  text-align:center;
   padding:10px;
+  background:#020617;
+}
+
+.date-bar input{
+  padding:6px 10px;
+  font-size:16px;
+}
+
+.header-row{
+  display:flex;
+  padding:12px;
+  background:#111827;
+  font-weight:bold;
+  border-bottom:1px solid #334155;
+}
+
+.h-subject{ width:15%; }
+.h-chapters{ width:65%; }
+.h-target{
+  width:20%;
   text-align:center;
 }
 
@@ -26,73 +47,35 @@ h1{
   padding:15px;
 }
 
-.row{
-  display:flex;
-  align-items:flex-start;
+.subject-block{
+  margin-bottom:20px;
   background:#1e293b;
-  margin-bottom:15px;
+  border-radius:10px;
   padding:15px;
-  border-radius:8px;
-  gap:15px;
 }
 
-.subject{
-  width:12%;
+.subject-title{
   font-size:22px;
-  font-weight:bold;
   color:#38bdf8;
+  margin-bottom:10px;
 }
 
-.chapters{
-  width:25%;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.chapter{
-  background:#020617;
-  padding:10px;
-  border-radius:6px;
+.chapter-row{
   display:flex;
   align-items:center;
-  gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid #334155;
 }
 
-.chapter input{
-  transform: scale(1.8); /* BIG checkbox */
+.chapter-name{
+  width:65%;
 }
 
-.targets{
-  width:45%;
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
+.chapter-check{
+  width:20%;
+  text-align:center;
 }
 
-.task{
-  background:#020617;
-  padding:8px 10px;
-  border-radius:6px;
-  display:flex;
-  gap:5px;
-  align-items:center;
-}
-
-.task button{
-  background:red;
-  border:none;
-  color:white;
-  padding:2px 6px;
-  cursor:pointer;
-  border-radius:4px;
-}
-
-.addChapterBtn{
-  background:#22c55e;
-  border:none;
-  padding:8px 10px;
-  font-weight:bold;
-  border-radius:6px;
-  cursor:pointer;
+.chapter-check input{
+  transform:scale(1.8);
 }
