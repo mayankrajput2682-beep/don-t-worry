@@ -10,39 +10,51 @@ function loadPlanner() {
     const targetsDiv = row.querySelector(".targets");
     const addChapterBtn = row.querySelector(".addChapterBtn");
 
-    const key = datePicker.value + "_" + subject;
-    let data = JSON.parse(localStorage.getItem(key)) || [];
+    const storageKey = datePicker.value + "_" + subject;
+    let data = JSON.parse(localStorage.getItem(storageKey)) || [];
+    let activeChapterIndex = null;
 
     function save() {
-      localStorage.setItem(key, JSON.stringify(data));
+      localStorage.setItem(storageKey, JSON.stringify(data));
     }
 
-    function render() {
+    function renderChapters() {
       chaptersDiv.innerHTML = "";
-      targetsDiv.innerHTML = "";
 
-      data.forEach((chapter, cIndex) => {
+      data.forEach((chapter, index) => {
         const chDiv = document.createElement("div");
         chDiv.className = "chapter";
+        chDiv.style.cursor = "pointer";
         chDiv.innerHTML = `
           <input type="checkbox" ${chapter.done ? "checked" : ""}>
           <strong>${chapter.name}</strong>
         `;
 
         chDiv.querySelector("input").addEventListener("change", e => {
-          data[cIndex].done = e.target.checked;
+          data[index].done = e.target.checked;
           save();
         });
 
-        chDiv.addEventListener("click", () => showTargets(cIndex));
+        chDiv.addEventListener("click", () => {
+          activeChapterIndex = index;
+          renderTargets();
+        });
 
         chaptersDiv.appendChild(chDiv);
       });
     }
 
-    function showTargets(index) {
+    function renderTargets() {
       targetsDiv.innerHTML = "";
-      data[index].tasks.forEach((task, tIndex) => {
+
+      if (activeChapterIndex === null) {
+        targetsDiv.innerHTML = "<p>Select a chapter to see targets</p>";
+        return;
+      }
+
+      const chapter = data[activeChapterIndex];
+
+      chapter.tasks.forEach((task, tIndex) => {
         const tDiv = document.createElement("div");
         tDiv.className = "task";
         tDiv.innerHTML = `
@@ -57,9 +69,9 @@ function loadPlanner() {
         });
 
         tDiv.querySelector("button").addEventListener("click", () => {
-          data[index].tasks.splice(tIndex, 1);
+          chapter.tasks.splice(tIndex, 1);
           save();
-          showTargets(index);
+          renderTargets();
         });
 
         targetsDiv.appendChild(tDiv);
@@ -70,24 +82,26 @@ function loadPlanner() {
       addTaskBtn.onclick = () => {
         const name = prompt("Enter target (PYQ / Module / NCERT)");
         if (name) {
-          data[index].tasks.push({ name, done:false });
+          chapter.tasks.push({ name, done: false });
           save();
-          showTargets(index);
+          renderTargets();
         }
       };
+
       targetsDiv.appendChild(addTaskBtn);
     }
 
     addChapterBtn.onclick = () => {
       const name = prompt("Enter Chapter Name");
       if (name) {
-        data.push({ name, done:false, tasks:[] });
+        data.push({ name, done: false, tasks: [] });
         save();
-        render();
+        renderChapters();
       }
     };
 
-    render();
+    renderChapters();
+    renderTargets();
   });
 }
 
