@@ -1,107 +1,115 @@
 const datePicker = document.getElementById("datePicker");
-const rows = document.querySelectorAll(".row");
+const planner = document.getElementById("planner");
 
 datePicker.value = new Date().toISOString().split("T")[0];
 
-function loadPlanner() {
-  rows.forEach(row => {
-    const subject = row.dataset.subject;
-    const chaptersDiv = row.querySelector(".chapters");
-    const targetsDiv = row.querySelector(".targets");
-    const addChapterBtn = row.querySelector(".addChapterBtn");
+const syllabus = {
+  Physics: [
+    "Units & Measurements",
+    "Kinematics",
+    "Laws of Motion",
+    "Work Energy Power",
+    "Centre of Mass",
+    "Rotational Motion",
+    "Gravitation",
+    "Thermodynamics",
+    "Oscillations",
+    "Waves",
+    "Electrostatics",
+    "Current Electricity",
+    "Magnetism",
+    "Electromagnetic Induction",
+    "AC",
+    "Ray Optics",
+    "Wave Optics",
+    "Dual Nature",
+    "Atoms & Nuclei",
+    "Semiconductors"
+  ],
 
-    const storageKey = datePicker.value + "_" + subject;
-    let data = JSON.parse(localStorage.getItem(storageKey)) || [];
-    let activeChapterIndex = null;
+  Chemistry: [
+    "Some Basic Concepts",
+    "Structure of Atom",
+    "Periodic Table",
+    "Chemical Bonding",
+    "Thermodynamics",
+    "Equilibrium",
+    "Redox",
+    "Organic Basics",
+    "Hydrocarbons",
+    "Solid State",
+    "Solutions",
+    "Electrochemistry",
+    "Chemical Kinetics",
+    "Coordination Compounds",
+    "Haloalkanes",
+    "Alcohol Phenol Ether",
+    "Aldehyde Ketone",
+    "Biomolecules"
+  ],
 
-    function save() {
-      localStorage.setItem(storageKey, JSON.stringify(data));
-    }
+  Botany: [
+    "Living World",
+    "Biological Classification",
+    "Plant Kingdom",
+    "Morphology of Flowering Plants",
+    "Anatomy of Flowering Plants",
+    "Photosynthesis",
+    "Respiration in Plants",
+    "Plant Growth",
+    "Sexual Reproduction in Plants",
+    "Ecosystem",
+    "Biodiversity",
+    "Plant Physiology"
+  ],
 
-    function renderChapters() {
-      chaptersDiv.innerHTML = "";
+  Zoology: [
+    "Animal Kingdom",
+    "Structural Organisation in Animals",
+    "Digestion",
+    "Breathing",
+    "Circulation",
+    "Excretion",
+    "Neural Control",
+    "Endocrine System",
+    "Reproduction in Humans",
+    "Genetics",
+    "Evolution",
+    "Human Health & Disease"
+  ]
+};
 
-      data.forEach((chapter, index) => {
-        const chDiv = document.createElement("div");
-        chDiv.className = "chapter";
-        chDiv.style.cursor = "pointer";
-        chDiv.innerHTML = `
-          <input type="checkbox" ${chapter.done ? "checked" : ""}>
-          <strong>${chapter.name}</strong>
-        `;
+function loadPlanner(){
+  planner.innerHTML = "";
+  const dateKey = datePicker.value;
 
-        chDiv.querySelector("input").addEventListener("change", e => {
-          data[index].done = e.target.checked;
-          save();
-        });
+  Object.keys(syllabus).forEach(subject => {
+    const block = document.createElement("div");
+    block.className = "subject-block";
 
-        chDiv.addEventListener("click", () => {
-          activeChapterIndex = index;
-          renderTargets();
-        });
+    block.innerHTML = `<div class="subject-title">${subject}</div>`;
 
-        chaptersDiv.appendChild(chDiv);
+    syllabus[subject].forEach(chapter => {
+      const key = `${dateKey}_${subject}_${chapter}`;
+      const checked = localStorage.getItem(key) === "true";
+
+      const row = document.createElement("div");
+      row.className = "chapter-row";
+      row.innerHTML = `
+        <div class="chapter-name">${chapter}</div>
+        <div class="chapter-check">
+          <input type="checkbox" ${checked ? "checked" : ""}>
+        </div>
+      `;
+
+      row.querySelector("input").addEventListener("change", e => {
+        localStorage.setItem(key, e.target.checked);
       });
-    }
 
-    function renderTargets() {
-      targetsDiv.innerHTML = "";
+      block.appendChild(row);
+    });
 
-      if (activeChapterIndex === null) {
-        targetsDiv.innerHTML = "<p>Select a chapter to see targets</p>";
-        return;
-      }
-
-      const chapter = data[activeChapterIndex];
-
-      chapter.tasks.forEach((task, tIndex) => {
-        const tDiv = document.createElement("div");
-        tDiv.className = "task";
-        tDiv.innerHTML = `
-          <input type="checkbox" ${task.done ? "checked" : ""}>
-          ${task.name}
-          <button>X</button>
-        `;
-
-        tDiv.querySelector("input").addEventListener("change", e => {
-          task.done = e.target.checked;
-          save();
-        });
-
-        tDiv.querySelector("button").addEventListener("click", () => {
-          chapter.tasks.splice(tIndex, 1);
-          save();
-          renderTargets();
-        });
-
-        targetsDiv.appendChild(tDiv);
-      });
-
-      const addTaskBtn = document.createElement("button");
-      addTaskBtn.textContent = "+ Target";
-      addTaskBtn.onclick = () => {
-        const name = prompt("Enter target (PYQ / Module / NCERT)");
-        if (name) {
-          chapter.tasks.push({ name, done: false });
-          save();
-          renderTargets();
-        }
-      };
-
-      targetsDiv.appendChild(addTaskBtn);
-    }
-
-    addChapterBtn.onclick = () => {
-      const name = prompt("Enter Chapter Name");
-      if (name) {
-        data.push({ name, done: false, tasks: [] });
-        save();
-        renderChapters();
-      }
-    };
-
-    renderChapters();
-    renderTargets();
+    planner.appendChild(block);
   });
 }
 
