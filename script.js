@@ -1,52 +1,63 @@
+const datePicker = document.getElementById("datePicker");
 const rows = document.querySelectorAll(".row");
 
-rows.forEach(row => {
-  const subject = row.dataset.subject;
-  const targetsDiv = row.querySelector(".targets");
-  const addBtn = row.querySelector(".addBtn");
+// set today date
+const today = new Date().toISOString().split("T")[0];
+datePicker.value = today;
 
-  let tasks = JSON.parse(localStorage.getItem(subject)) || [];
+function loadPlanner() {
+  rows.forEach(row => {
+    const subject = row.dataset.subject;
+    const targetsDiv = row.querySelector(".targets");
+    const addBtn = row.querySelector(".addBtn");
 
-  function save() {
-    localStorage.setItem(subject, JSON.stringify(tasks));
-  }
+    let key = datePicker.value + "_" + subject;
+    let tasks = JSON.parse(localStorage.getItem(key)) || [];
 
-  function render() {
-    targetsDiv.innerHTML = "";
-    tasks.forEach((task, index) => {
-      const div = document.createElement("div");
-      div.className = "task";
-      div.innerHTML = `
-        <label>
-          <input type="checkbox" ${task.done ? "checked" : ""}>
-          ${task.name}
-        </label>
-        <button>X</button>
-      `;
+    function save() {
+      localStorage.setItem(key, JSON.stringify(tasks));
+    }
 
-      div.querySelector("input").addEventListener("change", e => {
-        tasks[index].done = e.target.checked;
-        save();
+    function render() {
+      targetsDiv.innerHTML = "";
+      tasks.forEach((task, index) => {
+        const div = document.createElement("div");
+        div.className = "task";
+        div.innerHTML = `
+          <label>
+            <input type="checkbox" ${task.done ? "checked" : ""}>
+            ${task.name}
+          </label>
+          <button>X</button>
+        `;
+
+        div.querySelector("input").addEventListener("change", e => {
+          tasks[index].done = e.target.checked;
+          save();
+        });
+
+        div.querySelector("button").addEventListener("click", () => {
+          tasks.splice(index, 1);
+          save();
+          render();
+        });
+
+        targetsDiv.appendChild(div);
       });
+    }
 
-      div.querySelector("button").addEventListener("click", () => {
-        tasks.splice(index, 1);
+    addBtn.onclick = () => {
+      const name = prompt("Enter target (PYQ / Chapter / Test)");
+      if (name) {
+        tasks.push({ name, done:false });
         save();
         render();
-      });
+      }
+    };
 
-      targetsDiv.appendChild(div);
-    });
-  }
-
-  addBtn.addEventListener("click", () => {
-    const name = prompt("Enter Target (PYQ, Module, Chapter etc.)");
-    if (name) {
-      tasks.push({ name, done:false });
-      save();
-      render();
-    }
+    render();
   });
+}
 
-  render();
-});
+datePicker.addEventListener("change", loadPlanner);
+loadPlanner();
