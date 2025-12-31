@@ -2,54 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NEET Chapter Planner</title>
+<title>NEET Daily Chapter Tracker</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>NEET Chapter-wise Daily Planner</h1>
+<h1>NEET Daily Chapter Completion Tracker</h1>
 
 <div class="date-bar">
-  <label>Select Date:</label>
+  <label>Date:</label>
   <input type="date" id="datePicker">
 </div>
 
-<div class="container">
-
-  <!-- PHYSICS -->
-  <div class="row" data-subject="Physics">
-    <div class="subject">Physics</div>
-
-    <div class="chapters"></div>
-
-    <div class="targets"></div>
-
-    <button class="addChapterBtn">+ Chapter</button>
-  </div>
-
-  <!-- CHEMISTRY -->
-  <div class="row" data-subject="Chemistry">
-    <div class="subject">Chemistry</div>
-
-    <div class="chapters"></div>
-
-    <div class="targets"></div>
-
-    <button class="addChapterBtn">+ Chapter</button>
-  </div>
-
-  <!-- BIOLOGY -->
-  <div class="row" data-subject="Biology">
-    <div class="subject">Biology</div>
-
-    <div class="chapters"></div>
-
-    <div class="targets"></div>
-
-    <button class="addChapterBtn">+ Chapter</button>
-  </div>
-
+<div class="header-row">
+  <div class="h-subject">SUBJECT</div>
+  <div class="h-chapters">CHAPTERS</div>
+  <div class="h-target">TARGET</div>
 </div>
+
+<div class="container" id="planner"></div>
 
 <script src="script.js"></script>
 </body>
