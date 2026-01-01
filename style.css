@@ -1,9 +1,84 @@
-.timer{
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background:#0b1220;
+  color:white;
+}
+
+h1{
   text-align:center;
-  padding:12px;
-  font-size:22px;
-  font-weight:bold;
+  padding:15px;
   background:#020617;
-  color:#facc15;
+}
+
+.date-bar{
+  background:#020617;
+  padding:10px;
+  text-align:center;
+}
+
+.table-header{
+  display:flex;
+  padding:10px;
+  background:#111827;
+  font-weight:bold;
   border-bottom:2px solid #334155;
+}
+
+.col-subject{ width:30%; }
+.col-target{ width:8%; text-align:center; }
+.col-complete{
+  width:14%;
+  text-align:center;
+  color:#22c55e;
+}
+
+.subject-block{
+  margin:10px;
+  background:#1e293b;
+  border-radius:10px;
+  padding:10px;
+}
+
+.subject-title{
+  font-size:22px;
+  color:#38bdf8;
+  margin-bottom:6px;
+}
+
+.chapter-row{
+  display:flex;
+  align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid #334155;
+}
+
+.chapter-name{
+  width:30%;
+  padding-left:10px;
+  font-weight:500;
+}
+
+.cell-target{
+  width:8%;
+  text-align:center;
+}
+
+.cell-target input{
+  transform:scale(1.3);
+}
+
+.cell-complete{
+  width:14%;
+  text-align:center;
+}
+
+.cell-complete input{
+  transform:scale(2);              /* BIGGEST */
+  accent-color:#22c55e;            /* GREEN */
 }
