@@ -27,14 +27,15 @@ h1{
   padding:10px;
   background:#111827;
   font-weight:bold;
-  border-bottom:1px solid #334155;
+  border-bottom:2px solid #334155;
 }
 
-.col-subject{ width:12%; }
-.col-chapter{ width:28%; }
-.col-target{
-  width:10%;
+.col-subject{ width:30%; }
+.col-target{ width:8%; text-align:center; }
+.col-complete{
+  width:14%;
   text-align:center;
+  color:#22c55e;
 }
 
 .subject-block{
@@ -45,35 +46,39 @@ h1{
 }
 
 .subject-title{
-  font-size:20px;
+  font-size:22px;
   color:#38bdf8;
-  margin-bottom:5px;
+  margin-bottom:6px;
 }
 
-.row{
+.chapter-row{
   display:flex;
   align-items:center;
   padding:8px 0;
   border-bottom:1px solid #334155;
 }
 
-.cell-subject{ width:12%; }
-.cell-chapter{
-  width:28%;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.cell-chapter input{
-  transform:scale(1.6);
+.chapter-name{
+  width:30%;
+  padding-left:10px;
+  font-weight:500;
 }
 
 .cell-target{
-  width:10%;
+  width:8%;
   text-align:center;
 }
 
 .cell-target input{
   transform:scale(1.3);
+}
+
+.cell-complete{
+  width:14%;
+  text-align:center;
+}
+
+.cell-complete input{
+  transform:scale(2);              /* BIGGEST */
+  accent-color:#22c55e;            /* GREEN */
 }
