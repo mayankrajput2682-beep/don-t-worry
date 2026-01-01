@@ -22,7 +22,7 @@ h1{
   text-align:center;
 }
 
-.header-row{
+.table-header{
   display:flex;
   padding:10px;
   background:#111827;
@@ -30,57 +30,50 @@ h1{
   border-bottom:1px solid #334155;
 }
 
-.h-subject{ width:15%; }
-.h-chapter{ width:45%; }
-.h-targets{
-  width:40%;
+.col-subject{ width:12%; }
+.col-chapter{ width:28%; }
+.col-target{
+  width:10%;
   text-align:center;
 }
 
 .subject-block{
-  margin:15px;
+  margin:10px;
   background:#1e293b;
   border-radius:10px;
-  padding:15px;
+  padding:10px;
 }
 
 .subject-title{
-  font-size:22px;
+  font-size:20px;
   color:#38bdf8;
-  margin-bottom:10px;
+  margin-bottom:5px;
 }
 
-.chapter-row{
+.row{
   display:flex;
-  align-items:flex-start;
-  padding:10px 0;
+  align-items:center;
+  padding:8px 0;
   border-bottom:1px solid #334155;
 }
 
-.chapter-col{
-  width:45%;
+.cell-subject{ width:12%; }
+.cell-chapter{
+  width:28%;
   display:flex;
   align-items:center;
   gap:10px;
 }
 
-.chapter-col input{
-  transform:scale(1.8);
+.cell-chapter input{
+  transform:scale(1.6);
 }
 
-.targets-col{
-  width:40%;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
+.cell-target{
+  width:10%;
+  text-align:center;
 }
 
-.targets-col label{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.targets-col input{
-  transform:scale(1.2);
+.cell-target input{
+  transform:scale(1.3);
 }
