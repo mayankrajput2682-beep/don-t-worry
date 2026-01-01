@@ -3,16 +3,8 @@ const planner = document.getElementById("planner");
 
 datePicker.value = new Date().toISOString().split("T")[0];
 
-const FIXED_TARGETS = [
-  "Lecture",
-  "NCERT",
-  "Revision",
-  "Module",
-  "DPP",
-  "PYQs"
-];
+const TARGETS = ["Lecture","NCERT","Revision","Module","DPP","PYQs"];
 
-// NCERT syllabus (Class 11 + 12 – simplified but accurate)
 const syllabus = {
   Physics: [
     "Units & Measurements",
@@ -97,49 +89,40 @@ function loadPlanner(){
     block.innerHTML = `<div class="subject-title">${subject}</div>`;
 
     syllabus[subject].forEach(chapter => {
-      const chapterKey = `${dateKey}_${subject}_${chapter}_CH`;
-
       const row = document.createElement("div");
-      row.className = "chapter-row";
+      row.className = "row";
 
-      // Chapter column
-      const chapterCol = document.createElement("div");
-      chapterCol.className = "chapter-col";
+      // chapter checkbox
+      const chapterKey = `${dateKey}_${subject}_${chapter}_CH`;
       const chChecked = localStorage.getItem(chapterKey) === "true";
 
-      chapterCol.innerHTML = `
-        <input type="checkbox" ${chChecked ? "checked":""}>
-        <strong>${chapter}</strong>
+      row.innerHTML = `
+        <div class="cell-subject"></div>
+        <div class="cell-chapter">
+          <input type="checkbox" ${chChecked?"checked":""}>
+          ${chapter}
+        </div>
       `;
 
-      chapterCol.querySelector("input").onchange = e => {
+      row.querySelector("input").onchange = e => {
         localStorage.setItem(chapterKey, e.target.checked);
       };
 
-      // Targets column
-      const targetsCol = document.createElement("div");
-      targetsCol.className = "targets-col";
-
-      FIXED_TARGETS.forEach(target => {
+      // targets checkboxes
+      TARGETS.forEach(target => {
         const tKey = `${dateKey}_${subject}_${chapter}_${target}`;
         const checked = localStorage.getItem(tKey) === "true";
 
-        const label = document.createElement("label");
-        label.innerHTML = `
-          <input type="checkbox" ${checked ? "checked":""}>
-          ${target}
-        `;
+        const cell = document.createElement("div");
+        cell.className = "cell-target";
+        cell.innerHTML = `<input type="checkbox" ${checked?"checked":""}>`;
 
-        label.querySelector("input").onchange = e => {
+        cell.querySelector("input").onchange = e => {
           localStorage.setItem(tKey, e.target.checked);
         };
 
-        targetsCol.appendChild(label);
+        row.appendChild(cell);
       });
-
-      row.appendChild(document.createElement("div")); // subject spacer
-      row.appendChild(chapterCol);
-      row.appendChild(targetsCol);
 
       block.appendChild(row);
     });
