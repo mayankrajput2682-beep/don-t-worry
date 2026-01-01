@@ -90,39 +90,44 @@ function loadPlanner(){
 
     syllabus[subject].forEach(chapter => {
       const row = document.createElement("div");
-      row.className = "row";
+      row.className = "chapter-row";
 
-      // chapter checkbox
-      const chapterKey = `${dateKey}_${subject}_${chapter}_CH`;
-      const chChecked = localStorage.getItem(chapterKey) === "true";
+      // chapter name
+      const chapterName = document.createElement("div");
+      chapterName.className = "chapter-name";
+      chapterName.textContent = chapter;
 
-      row.innerHTML = `
-        <div class="cell-subject"></div>
-        <div class="cell-chapter">
-          <input type="checkbox" ${chChecked?"checked":""}>
-          ${chapter}
-        </div>
-      `;
+      row.appendChild(chapterName);
 
-      row.querySelector("input").onchange = e => {
-        localStorage.setItem(chapterKey, e.target.checked);
-      };
-
-      // targets checkboxes
+      // target checkboxes
       TARGETS.forEach(target => {
-        const tKey = `${dateKey}_${subject}_${chapter}_${target}`;
-        const checked = localStorage.getItem(tKey) === "true";
+        const key = `${dateKey}_${subject}_${chapter}_${target}`;
+        const checked = localStorage.getItem(key) === "true";
 
         const cell = document.createElement("div");
         cell.className = "cell-target";
         cell.innerHTML = `<input type="checkbox" ${checked?"checked":""}>`;
 
         cell.querySelector("input").onchange = e => {
-          localStorage.setItem(tKey, e.target.checked);
+          localStorage.setItem(key, e.target.checked);
         };
 
         row.appendChild(cell);
       });
+
+      // chapter complete checkbox (BIG + GREEN)
+      const chKey = `${dateKey}_${subject}_${chapter}_COMPLETE`;
+      const chChecked = localStorage.getItem(chKey) === "true";
+
+      const completeCell = document.createElement("div");
+      completeCell.className = "cell-complete";
+      completeCell.innerHTML = `<input type="checkbox" ${chChecked?"checked":""}>`;
+
+      completeCell.querySelector("input").onchange = e => {
+        localStorage.setItem(chKey, e.target.checked);
+      };
+
+      row.appendChild(completeCell);
 
       block.appendChild(row);
     });
