@@ -3,23 +3,31 @@ const planner = document.getElementById("planner");
 
 datePicker.value = new Date().toISOString().split("T")[0];
 
+const FIXED_TARGETS = [
+  "Lecture",
+  "NCERT",
+  "Revision",
+  "Module",
+  "DPP",
+  "PYQs"
+];
+
+// NCERT syllabus (Class 11 + 12 – simplified but accurate)
 const syllabus = {
   Physics: [
     "Units & Measurements",
     "Kinematics",
     "Laws of Motion",
-    "Work Energy Power",
-    "Centre of Mass",
-    "Rotational Motion",
+    "Work, Energy & Power",
+    "Centre of Mass & Rotation",
     "Gravitation",
     "Thermodynamics",
-    "Oscillations",
-    "Waves",
+    "Oscillations & Waves",
     "Electrostatics",
     "Current Electricity",
-    "Magnetism",
+    "Magnetic Effects",
     "Electromagnetic Induction",
-    "AC",
+    "Alternating Current",
     "Ray Optics",
     "Wave Optics",
     "Dual Nature",
@@ -34,8 +42,8 @@ const syllabus = {
     "Chemical Bonding",
     "Thermodynamics",
     "Equilibrium",
-    "Redox",
-    "Organic Basics",
+    "Redox Reactions",
+    "Organic Chemistry Basics",
     "Hydrocarbons",
     "Solid State",
     "Solutions",
@@ -43,8 +51,8 @@ const syllabus = {
     "Chemical Kinetics",
     "Coordination Compounds",
     "Haloalkanes",
-    "Alcohol Phenol Ether",
-    "Aldehyde Ketone",
+    "Alcohols Phenols Ethers",
+    "Aldehydes Ketones",
     "Biomolecules"
   ],
 
@@ -56,23 +64,22 @@ const syllabus = {
     "Anatomy of Flowering Plants",
     "Photosynthesis",
     "Respiration in Plants",
-    "Plant Growth",
+    "Plant Growth & Development",
     "Sexual Reproduction in Plants",
     "Ecosystem",
-    "Biodiversity",
-    "Plant Physiology"
+    "Biodiversity"
   ],
 
   Zoology: [
     "Animal Kingdom",
-    "Structural Organisation in Animals",
-    "Digestion",
-    "Breathing",
-    "Circulation",
-    "Excretion",
+    "Structural Organisation",
+    "Digestion & Absorption",
+    "Breathing & Exchange of Gases",
+    "Body Fluids & Circulation",
+    "Excretory Products",
     "Neural Control",
     "Endocrine System",
-    "Reproduction in Humans",
+    "Human Reproduction",
     "Genetics",
     "Evolution",
     "Human Health & Disease"
@@ -90,21 +97,49 @@ function loadPlanner(){
     block.innerHTML = `<div class="subject-title">${subject}</div>`;
 
     syllabus[subject].forEach(chapter => {
-      const key = `${dateKey}_${subject}_${chapter}`;
-      const checked = localStorage.getItem(key) === "true";
+      const chapterKey = `${dateKey}_${subject}_${chapter}_CH`;
 
       const row = document.createElement("div");
       row.className = "chapter-row";
-      row.innerHTML = `
-        <div class="chapter-name">${chapter}</div>
-        <div class="chapter-check">
-          <input type="checkbox" ${checked ? "checked" : ""}>
-        </div>
+
+      // Chapter column
+      const chapterCol = document.createElement("div");
+      chapterCol.className = "chapter-col";
+      const chChecked = localStorage.getItem(chapterKey) === "true";
+
+      chapterCol.innerHTML = `
+        <input type="checkbox" ${chChecked ? "checked":""}>
+        <strong>${chapter}</strong>
       `;
 
-      row.querySelector("input").addEventListener("change", e => {
-        localStorage.setItem(key, e.target.checked);
+      chapterCol.querySelector("input").onchange = e => {
+        localStorage.setItem(chapterKey, e.target.checked);
+      };
+
+      // Targets column
+      const targetsCol = document.createElement("div");
+      targetsCol.className = "targets-col";
+
+      FIXED_TARGETS.forEach(target => {
+        const tKey = `${dateKey}_${subject}_${chapter}_${target}`;
+        const checked = localStorage.getItem(tKey) === "true";
+
+        const label = document.createElement("label");
+        label.innerHTML = `
+          <input type="checkbox" ${checked ? "checked":""}>
+          ${target}
+        `;
+
+        label.querySelector("input").onchange = e => {
+          localStorage.setItem(tKey, e.target.checked);
+        };
+
+        targetsCol.appendChild(label);
       });
+
+      row.appendChild(document.createElement("div")); // subject spacer
+      row.appendChild(chapterCol);
+      row.appendChild(targetsCol);
 
       block.appendChild(row);
     });
